@@ -1,6 +1,6 @@
 {
   "name": "@alexvipond/kumu-docs-extracted",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Extracted functions for the Kumu docs",
   "main": "lib/index.umd.js",
   "module": "lib/index.es.js",
