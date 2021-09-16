@@ -122,3 +122,45 @@ function toDefaultCallbacksByField<Callback> ({ normalFields, defaultCallback }:
     return defaultCallbacks
   }, {})
 }
+
+export function appendSearchBox (
+  { id, hasInfo }: {
+    id: string,
+    hasInfo: boolean,
+  }
+) {
+  const input = document.createElement('input')
+  input.type = 'text'
+  input.classList.add('search-box')
+  input.placeholder = 'Type to filter...'
+
+  const table = document.getElementById(id),
+        trs: HTMLElement[] = Array.from(table.querySelectorAll("tbody tr"))
+
+  function search (query) {
+    for (const tr of trs) {
+      const tds = Array.from(tr.querySelectorAll('td')),
+            textToSearch = tds
+              .reduce((textToSearch, td, index) => {
+                if (hasInfo && index === tds.length - 1) {
+                  return textToSearch + td.querySelector('i').dataset.originalTitle
+                }
+
+                return textToSearch + td.textContent
+              }, '')
+              .toLowerCase()
+
+      if(textToSearch.includes(query.toLowerCase())) {
+          tr.style.display = "table-row"
+      } else {
+          tr.style.display = "none"
+      }
+    }
+  }
+
+  input.addEventListener('input', event => {
+    search((event.target as HTMLInputElement).value)
+  })
+
+  table.parentNode.insertBefore(input, table)
+}

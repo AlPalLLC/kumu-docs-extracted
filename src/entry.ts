@@ -1,4 +1,4 @@
-import { appendTable } from './kumu-docs-extracted'
+import { appendTable, appendSearchBox } from './kumu-docs-extracted'
 import { selectorReference } from './selectorReference'
 import { staticControlsReference } from './staticControlsReference'
 import { propertyReference } from './propertyReference'
@@ -21,4 +21,8 @@ appendTable(
       }
     }
   }
+)
+
+appendSearchBox(
+  { id: 'property-reference', hasInfo: true }
 )
