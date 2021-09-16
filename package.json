@@ -2,11 +2,12 @@
   "name": "@alexvipond/kumu-docs-extracted",
   "version": "0.0.0",
   "description": "Extracted functions for the Kumu docs",
-  "main": "lib/index.js",
-  "module": "lib/index.js",
+  "main": "lib/index.umd.js",
+  "module": "lib/index.es.js",
   "exports": {
     ".": {
-      "import": "./lib/index.js"
+      "import": "./lib/index.es.js",
+      "require": "./lib/index.umd.js"
     }
   },
   "scripts": {
@@ -15,13 +16,6 @@
     "build:lib": "vite build --config vite.lib.config.ts && tsc"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^1.2.5",
-    "autoprefixer": "^10.3.1",
-    "postcss": "^8.3.6",
-    "tailwindcss": "^2.2.7",
     "vite": "^2.5.7"
-  },
-  "dependencies": {
-    "vue": "^3.1.5"
   }
 }
