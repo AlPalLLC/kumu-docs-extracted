@@ -1,28 +1,32 @@
 import { appendTable, appendSearchBox } from './kumu-docs-extracted'
 import { selectorReference } from './selectorReference'
 import { staticControlsReference } from './staticControlsReference'
+import { interactiveControlsReference } from './interactiveControlsReference'
+import { settingsReference } from './settingsReference'
 import { propertyReference } from './propertyReference'
 
 const table = document.createElement('table')
-table.id = 'property-reference'
+table.id = 'settings-reference'
 document.body.appendChild(table)
 
 appendTable(
-  { id: 'property-reference', reference: propertyReference },
+  { id: 'settings-reference', reference: settingsReference },
   {
     transforms: {
-      DEFAULT: (value, { checkmark }) => value === true ? checkmark : `${value}`,
+      'Possible values': values => 
+        Array.isArray(values) 
+          ? values.map(value => `<div><code>${value}</code></div>`).join('')
+          : `${values}`
     },
     effects: {
-      table: table => table.classList.add('table', 'borderless', 'property-reference'),
       th: {
         DEFAULT: th => th.classList.add('text-center'),
-        'Property': th => th.classList.add('text-left'),
+        Property: th => th.classList.add('text-left'),
       }
     }
   }
 )
 
 appendSearchBox(
-  { id: 'property-reference', hasInfo: true }
+  { id: 'settings-reference', hasInfo: true }
 )

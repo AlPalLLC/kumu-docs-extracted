@@ -1,8 +1,9 @@
 type Effect = (element: HTMLElement) => any
-type Transform = (value: string | boolean, utils: TransformUtils) => string
+type Transform = (value: string | boolean | string[], utils: TransformUtils) => string
 type TransformUtils = {
   checkmark: '<i class="fa fa-check"></i>',
 }
+type Info = { description: string, validValues: string[] }
 
 const defaultTransform: Transform = innerHTML => `${innerHTML}`
 const defaultEffect: Effect = () => {}
@@ -14,7 +15,7 @@ const transformUtils = {
 export function appendTable(
   { id, reference }: {
     id: string,
-    reference: { [field: string]: string | boolean }[]
+    reference: ({ [field: string]: string | boolean | string[] | Info })[]
   },
   { transforms, effects }: {
     transforms?: {
@@ -36,8 +37,7 @@ export function appendTable(
   }
 ) {
   const fields = Object.keys(reference[0]),
-        normalFields = fields.filter(field => !field.startsWith('INFO')),
-        infoFields = fields.filter(field => field.startsWith('INFO')),
+        normalFields = fields.filter(field => field !== 'info'),
         ensuredTransforms = {
           ...toDefaultCallbacksByField({ normalFields, defaultCallback: transforms?.DEFAULT || defaultTransform }),
           ...transforms,
@@ -76,30 +76,30 @@ export function appendTable(
     trHead.appendChild(th)
   }
 
-  if (infoFields.length > 0) {
+  if (reference[0].info) {
     const th = document.createElement('th')
     trHead.appendChild(th)
   }
 
   thead.appendChild(trHead)
 
-  for (const item of reference) {
+  for (const entry of reference) {
     const tr = document.createElement('tr')
     ensuredEffects.tr(tr)
 
     for (const field of normalFields) {
       const td = document.createElement('td')
       ensuredEffects.td[field](td)
-      td.innerHTML = ensuredTransforms[field](item[field], transformUtils)
+
+      td.innerHTML = ensuredTransforms[field](entry[field] as string | boolean | string[], transformUtils)
 
       tr.appendChild(td)
     }
 
-    if (infoFields.length > 0) {
+    if (reference[0].info) {
       const td = document.createElement('td'),
-            description = item['INFO Description'],
-            validValues = `${item['INFO Valid values']}`
-              .split('|')
+            description = (entry.info as Info).description,
+            validValues = (entry.info as Info).validValues
               .map(validValue => `<code>${validValue}</code>`)
               .join('<br>')
 
